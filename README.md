@@ -1,3 +1,5 @@
+# YouTube Dashboard
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -16,9 +18,14 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Video Selection**: Select a YouTube video to view and trim.
+- **Video Playback**: Play and pause the selected video.
+- **Trim Functionality**: Set start and end points to trim the video.
+- **Mute/Unmute**: Toggle sound on the video player.
+- **Progress Bar**: View and control the current playback time.
+- **Local Storage**: Save and load trim settings for each video.
 
 ## Learn More
 
