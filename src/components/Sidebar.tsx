@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { Video, VideoListResponse } from '@/types'
 import { useDebounce } from '@/hooks/useDebounce'
 import Pagination from './Pagination'
-import { useVideo } from '@/context/VideoContext'
+import VideoCard from './VideoCard'
+import React from 'react'
 
 export default function Sidebar() {
   const [videos, setVideos] = useState<Video[]>([])
@@ -36,7 +37,7 @@ export default function Sidebar() {
   }, [debouncedSearch, currentPage])
 
   return (
-    <aside className="font-sans w-full md:w-96 bg-[#1F1F1F] text-gray-200 border-r border-gray-700 overflow-y-auto">
+    <aside className="font-sans w-full md:w-96 bg-[#1F1F1F] text-gray-200 border-r border-gray-700 h-screen flex flex-col">
       {/* Header */}
       <div className="px-4 py-4">
         <h1 className="text-xl font-semibold tracking-wide mb-4">
@@ -57,15 +58,22 @@ export default function Sidebar() {
       </div>
 
       {/* Video List */}
-      <div className="px-2 space-y-2 pb-20">
+      <div className="px-2 space-y-2 py-2 md:overflow-y-auto flex-grow">
         {loading ? (
-          <div className="text-gray-500 text-center py-4">Loading...</div>
+          <div key="loading-state" className="text-gray-500 text-center py-4">
+            Loading...
+          </div>
         ) : videos.length > 0 ? (
           videos.map((video) => (
-            <VideoCard key={video.id.videoId} video={video} />
+            <VideoCard
+              key={video.id.videoId}
+              video={video}
+            />
           ))
         ) : (
-          <div className="text-gray-500 text-center py-4">No videos found</div>
+          <div key="no-videos-state" className="text-gray-500 text-center py-4">
+            No videos found
+          </div>
         )}
       </div>
 
@@ -81,48 +89,3 @@ export default function Sidebar() {
   )
 }
 
-// ------------- VideoCard -------------
-interface VideoCardProps {
-  video: Video
-}
-
-function VideoCard({ video }: VideoCardProps) {
-  const { selectedVideo, setSelectedVideo } = useVideo()
-  const isSelected = selectedVideo?.id.videoId === video.id.videoId
-
-  return (
-    <div
-      onClick={() => setSelectedVideo(video)}
-      className={`
-        flex items-center p-3 rounded-md cursor-pointer transition-colors
-        ${isSelected
-          ? 'bg-[#2F2F2F] ring-1 ring-blue-500'
-          : 'hover:bg-[#2A2A2A]'
-        }
-      `}
-    >
-      {/* Thumbnail */}
-      <div className="flex-shrink-0 w-[120px] aspect-video relative rounded overflow-hidden bg-black">
-        <img
-          src={video.snippet.thumbnails.medium.url}
-          alt={video.snippet.title}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      </div>
-      {/* Video Info */}
-      <div className="ml-3 flex-1 overflow-hidden">
-        <h3
-          className={`
-            text-sm font-medium mb-1 line-clamp-2 
-            ${isSelected ? 'text-blue-400' : 'text-gray-100'}
-          `}
-        >
-          {video.snippet.title}
-        </h3>
-        <p className="text-xs text-gray-400 line-clamp-2">
-          {video.snippet.description}
-        </p>
-      </div>
-    </div>
-  )
-}

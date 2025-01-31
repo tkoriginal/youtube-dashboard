@@ -12,11 +12,13 @@ export async function GET(request: Request) {
     const pageSize = parseInt(searchParams.get('pagesize') || '10')
 
     // Filter and paginate data
-    let filteredVideos = data.items.filter((video) =>
-      video.snippet.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      video.snippet.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredVideos = data.items.filter((video) =>
+      (video.snippet.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        video.snippet.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      // Results can also return playlists, channels, etc.
+      video.id.kind === 'youtube#video'
     ) as Video[]
-
+    console.log(filteredVideos[0].kind)
     // Pagination calculations
     const startIndex = (page - 1) * pageSize
     const endIndex = startIndex + pageSize
