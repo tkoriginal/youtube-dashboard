@@ -1,6 +1,6 @@
 # YouTube Dashboard
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Can be visit live [here](https://youtube-dashboard-a5zwh230l-tauqueer-khans-projects.vercel.app/) 
 
 ## Getting Started
 
@@ -8,15 +8,8 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Can be visits [here](https://youtube-dashboard-a5zwh230l-tauqueer-khans-projects.vercel.app/) 
 
 ## Features
 
