@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter } from '@next/font/google'
+import { Inter } from 'next/font/google'
 
 const inter = Inter({
-  weight: ['400', '500', '700'], // choose the weights you need
+  weight: ['400', '500', '700'],
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
@@ -11,7 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Youtube Dashboard",
-  description: "Youtube Dashboard by Supademo",
+  description: "Ultimate Youtube Dashboard",
 };
 
 export default function RootLayout({
