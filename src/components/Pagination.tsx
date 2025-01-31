@@ -19,7 +19,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         Previous
       </button>
 
-      <span className="text-sm text-gray-700">
+      <span className="text-sm text-gray-700 flex-1 text-center">
         Page {Math.min(currentPage, totalPages)} of {totalPages}
       </span>
 

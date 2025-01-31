@@ -8,7 +8,8 @@ import {
   ClockIcon,
   ChevronUpIcon,
   SpeakerWaveIcon,
-  SpeakerXMarkIcon
+  SpeakerXMarkIcon,
+  ArrowsPointingOutIcon
 } from '@heroicons/react/24/solid'
 import RangeSlider from './RangeSlider'
 import ProgressBar from './ProgressBar'
@@ -295,6 +296,22 @@ export default function VideoPlayer() {
     return `${pad(hours)}:${pad(minutes)}:${pad(remainingSeconds)}`;
   }
 
+  const toggleFullscreen = () => {
+    if (playerRef.current && typeof playerRef.current.getIframe === 'function') {
+      const iframe = playerRef.current.getIframe();
+      if (iframe) {
+        // Request fullscreen on the iframe element
+        if (!document.fullscreenElement) {
+          iframe.requestFullscreen?.() ||
+            iframe.webkitRequestFullscreen?.() ||
+            iframe.mozRequestFullScreen?.() ||
+            iframe.msRequestFullscreen?.();
+        }
+      }
+    }
+  };
+
+
   // Render component
   return (
     <div className="md:flex-1 bg-gradient-to-br from-gray-900 to-gray-800 p-4 md:p-6 shadow-2xl">
@@ -417,6 +434,13 @@ export default function VideoPlayer() {
                   ) : (
                     <SpeakerWaveIcon className="h-6 w-6 text-gray-400" />
                   )}
+                </button>
+                <button
+                  onClick={toggleFullscreen}
+                  className="p-2 hover:bg-gray-700 rounded-full"
+                  aria-label="Toggle fullscreen"
+                >
+                  <ArrowsPointingOutIcon className="w-5 h-5 text-gray-400" />
                 </button>
               </div>
             </div>
