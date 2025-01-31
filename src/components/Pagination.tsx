@@ -8,7 +8,7 @@ interface PaginationProps {
 
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200">
+    <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 rounded-xl">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
