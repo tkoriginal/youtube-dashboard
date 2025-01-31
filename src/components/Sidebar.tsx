@@ -2,11 +2,15 @@
 import { useState, useEffect } from 'react'
 import { Video, VideoListResponse } from '@/types'
 import { useDebounce } from '@/hooks/useDebounce'
+import Pagination from './Pagination'
+import { useVideo } from '@/context/VideoContext'
 
 export default function Sidebar() {
   const [videos, setVideos] = useState<Video[]>([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
   const debouncedSearch = useDebounce(search)
 
@@ -14,9 +18,10 @@ export default function Sidebar() {
     const fetchVideos = async () => {
       try {
         setLoading(true)
-        const res = await fetch(`/api/videos?search=${debouncedSearch}`)
+        const res = await fetch(`/api/videos?search=${debouncedSearch}&page=${currentPage}`)
         const data: VideoListResponse = await res.json()
         setVideos(data.items)
+        setTotalPages(data.totalPages)
       } catch (error) {
         console.error('Error fetching videos:', error)
       } finally {
@@ -25,10 +30,10 @@ export default function Sidebar() {
     }
 
     fetchVideos()
-  }, [debouncedSearch])
+  }, [debouncedSearch, currentPage])
 
   return (
-    <aside className="w-full md:w-64 lg:w-80 bg-white border-t md:border-r border-gray-200 overflow-y-auto">
+    <aside className="w-full md:w-80 lg:w-80 bg-white border-t md:border-r border-gray-200 overflow-y-auto">
       <div className="p-4">
         <h1 className="text-xl font-bold text-gray-800 mb-4">Video Library</h1>
         <div className="mb-4">
@@ -53,6 +58,13 @@ export default function Sidebar() {
           )}
         </div>
       </div>
+      <div className="sticky bottom-0 w-full">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
     </aside>
   )
 }
@@ -63,29 +75,35 @@ interface VideoCardProps {
 }
 
 function VideoCard({ video }: VideoCardProps) {
+  const { selectedVideo, setSelectedVideo } = useVideo()
+  const isSelected = selectedVideo?.id.videoId === video.id.videoId
+
   return (
-    <div className="p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-      <div className="aspect-video w-full mb-2 overflow-hidden rounded-lg">
-        <img
-          srcSet={`
-            ${video.snippet.thumbnails.default.url} 120w,
-            ${video.snippet.thumbnails.medium.url} 320w,
-            ${video.snippet.thumbnails.high.url} 480w
-          `}
-          sizes="(max-width: 768px) 120px,
-                 (max-width: 1024px) 320px,
-                 480px"
-          src={video.snippet.thumbnails.medium.url}
-          alt={video.snippet.title}
-          className="w-full h-full object-cover"
-        />
+    <div
+      onClick={() => setSelectedVideo(video)}
+      className={`p-3 rounded-lg cursor-pointer transition-colors
+        ${isSelected ? 'bg-blue-50 hover:bg-blue-100' : 'hover:bg-gray-50'}`}
+    >
+      <div className='flex space-x-4'>
+        <div className="w-[120px] flex-shrink-0">
+          <div className="aspect-video relative rounded-lg overflow-hidden">
+            <img
+              src={video.snippet.thumbnails.medium.url}
+              alt={video.snippet.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className={`font-medium mb-1 line-clamp-2 text-sm
+            ${isSelected ? 'text-blue-600' : 'text-gray-800'}`}>
+            {video.snippet.title}
+          </h3>
+          <p className="text-sm text-gray-500 line-clamp-2">
+            {video.snippet.description}
+          </p>
+        </div>
       </div>
-      <h3 className="font-medium text-gray-800 mb-1 line-clamp-2">
-        {video.snippet.title}
-      </h3>
-      <p className="text-sm text-gray-500 line-clamp-2">
-        {video.snippet.description}
-      </p>
     </div>
   )
 }
