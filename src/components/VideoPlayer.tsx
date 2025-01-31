@@ -17,6 +17,7 @@ interface TrimValues {
   end?: number
 }
 
+// Declare global window properties for YouTube API
 declare global {
   interface Window {
     YT: any
@@ -41,6 +42,7 @@ export default function VideoPlayer() {
     setIsPlayerReady(true);
   };
 
+  // Check if trim is at default values
   const isTrimDefault = trim.start === 0 && (trim.end === undefined || trim.end === duration)
 
   // Add mute toggle function
@@ -58,12 +60,14 @@ export default function VideoPlayer() {
     }
   }
 
+  // Expand trim section if trim is not default
   useEffect(() => {
     if (!isTrimDefault) {
       setIsTrimExpanded(true)
     }
   }, [isTrimDefault])
 
+  // Handle video selection change
   useEffect(() => {
     if (selectedVideo) {
       setIsLoading(true)
@@ -80,6 +84,7 @@ export default function VideoPlayer() {
     }
   }, [selectedVideo])
 
+  // Initialize YouTube API
   useEffect(() => {
     if (!isInitialized) {
       const tag = document.createElement('script')
@@ -94,6 +99,7 @@ export default function VideoPlayer() {
     }
   }, [isInitialized])
 
+  // Handle video selection change
   useEffect(() => {
     if (selectedVideo) {
       const savedTrim = localStorage.getItem(`trim-${selectedVideo.id.videoId}`)
@@ -105,6 +111,7 @@ export default function VideoPlayer() {
     }
   }, [selectedVideo])
 
+  // Initialize player when API is ready and video is selected
   useEffect(() => {
     if (isInitialized && selectedVideo) {
       if (playerRef.current) {
@@ -114,6 +121,7 @@ export default function VideoPlayer() {
     }
   }, [isInitialized, selectedVideo])
 
+  // Initialize YouTube player
   const initializePlayer = () => {
     if (!selectedVideo) return
 
@@ -165,6 +173,7 @@ export default function VideoPlayer() {
     })
   }
 
+  // Handle play/pause button click
   const handlePlayPause = () => {
     if (!playerRef.current) return
 
@@ -182,7 +191,7 @@ export default function VideoPlayer() {
     }
   }
 
-
+  // Handle time change from progress bar
   const handleTimeChange = (newTime: number) => {
     if (!playerRef.current) return
     try {
@@ -200,6 +209,7 @@ export default function VideoPlayer() {
     }
   }
 
+  // Track current time and clamp within trim boundaries
   useEffect(() => {
     // Early return if player not ready
     if (!isPlayerReady || !playerRef.current) return;
@@ -227,12 +237,12 @@ export default function VideoPlayer() {
     }
   }, [trim?.start, trim?.end, currentTime, isPlayerReady, duration]);
 
+  // Start tracking current time when video is playing
   const startTimeTracking = () => {
     const interval = setInterval(() => {
       if (playerRef.current) {
         try {
           const playerTime = playerRef.current?.getCurrentTime()
-          const maxTime = trim.end ?? duration ?? 0
 
           // Only update if not currently dragging
           setCurrentTime(Math.max(trim.start, Math.min(playerTime, trim.end || duration)))
@@ -251,6 +261,7 @@ export default function VideoPlayer() {
     return () => clearInterval(interval)
   }
 
+  // Start time tracking when video is playing
   useEffect(() => {
     if (isPlaying && playerRef.current) {
       const cleanup = startTimeTracking()
@@ -258,6 +269,7 @@ export default function VideoPlayer() {
     }
   }, [isPlaying, trim.end])
 
+  // Handle trim change and save to local storage
   const handleTrimChange = (newTrim: TrimValues) => {
     setTrim(newTrim)
     if (selectedVideo) {
@@ -265,6 +277,7 @@ export default function VideoPlayer() {
     }
   }
 
+  // Format time in HH:MM:SS
   const formatTime = (seconds: number): string => {
     if (typeof seconds !== 'number' || isNaN(seconds) || seconds < 0) {
       return '00:00:00';
@@ -282,6 +295,7 @@ export default function VideoPlayer() {
     return `${pad(hours)}:${pad(minutes)}:${pad(remainingSeconds)}`;
   }
 
+  // Render component
   return (
     <div className="md:flex-1 bg-gradient-to-br from-gray-900 to-gray-800 p-4 md:p-6 shadow-2xl">
       <div className="max-w-4xl mx-auto flex flex-col space-y-4">

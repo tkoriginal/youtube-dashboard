@@ -58,12 +58,12 @@ export default function Sidebar() {
       </div>
 
       {/* Video List */}
-      <div className="px-2 space-y-2 py-2 md:overflow-y-auto flex-grow">
+      <div className="px-2 space-y-2 py-2 md:overflow-y-auto flex-grow custom-scrollbar">
         {loading ? (
           <div key="loading-state" className="text-gray-500 text-center py-4">
             Loading...
           </div>
-        ) : videos.length > 0 ? (
+        ) : videos?.length > 0 ? (
           videos.map((video) => (
             <VideoCard
               key={video.id.videoId}
