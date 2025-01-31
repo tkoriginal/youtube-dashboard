@@ -36,7 +36,7 @@ export default function Sidebar() {
   }, [debouncedSearch, currentPage])
 
   return (
-    <aside className="font-sans w-full md:w-80 bg-[#1F1F1F] text-gray-200 border-r border-gray-700 overflow-y-auto">
+    <aside className="font-sans w-full md:w-96 bg-[#1F1F1F] text-gray-200 border-r border-gray-700 overflow-y-auto">
       {/* Header */}
       <div className="px-4 py-4">
         <h1 className="text-xl font-semibold tracking-wide mb-4">

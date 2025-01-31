@@ -19,3 +19,11 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Fixes blackbar present in youtube iframe */
+#youtube-player {
+  position: absolute;
+  left: -4px;
+  width: 101%;
+  height: 101%;
+}
